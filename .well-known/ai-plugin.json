@@ -5,14 +5,15 @@
   "description_for_human": "Analysis your gacha result in Arknights (Chinese server only)",
   "description_for_model": "Analysis your gacha result in Arknights (Chinese server only)",
   "auth": {
-    "type": "none"
+    "type": "user_http",
+    "authorization_type": "basic"
   },
   "api": {
       "type": "openapi",
-      "url": "http://localhost:3000/.well-known/ai-plugin-api.yaml",
+      "url": "https://agc.astrian.moe/.well-known/ai-plugin-api.yaml",
       "is_user_authenticated": true
   },
-  "logo_url": "https://web.hycdn.cn/siren/pic/20230508/8f7be68ffa9dea9da961df0997466617.jpg",
-  "contact_email": "support@example.com",
-  "legal_info_url": "https://astrianzheng.cn"
+  "logo_url": "https://web.hycdn.cn/arknights/official/static/share.19269d4d9c628de755a2.jpg",
+  "contact_email": "happy.wheel6743@astrian.moe",
+  "legal_info_url": "https://github.com/Astrian/arknights-gacha-chatgpt"
 }
