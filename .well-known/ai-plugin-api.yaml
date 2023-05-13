@@ -1,0 +1,48 @@
+openapi: 3.0.1
+info:
+  title: Arknights Gacha Analyser
+  description: Analysis your gacha result in Arknights (Chinese server only)
+  version: 'v1'
+servers:
+  - url: http://localhost:3000
+paths:
+  /gacha:
+    get:
+      operationId: getGachaResult
+      summary: Get recent gacha result
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gachaResult'
+components:
+  schemas:
+    gachaResult:
+      type: array
+      items:
+        type: object
+        properties:
+          ts:
+            type: integer
+            description: Timestamp of the gacha
+          pool:
+            type: string
+            description: Gacha pool, which means the collection of operators (characters)
+          chars:
+            type: array
+            description: Gacha result. Player may have 1 or 10 gacha result at a time
+            items:
+              type: object
+              description: Gacha result, indicates an operator (character)
+              properties:
+                name: 
+                  type: string
+                  description: Operator name
+                rarity:
+                  type: integer
+                  description: Operator rarity, 1(-star) means most common, 6(-star) means most rare
+                isNew:
+                  type: boolean
+                  description: This operator is newly obtained by this player if true

@@ -1,0 +1,33 @@
+{
+  "name": "arknights-gacha-chatgpt",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@koa/cors": "^4.0.0",
+    "@types/debug": "^4.1.7",
+    "@types/dotenv": "^8.2.0",
+    "@types/koa": "^2.13.6",
+    "@types/koa-route": "^3.2.5",
+    "@types/koa-static-server": "^1.5.0",
+    "@types/koa__cors": "^4.0.0",
+    "axios": "^1.4.0",
+    "debug": "^4.3.4",
+    "dotenv": "^16.0.3",
+    "koa": "^2.14.2",
+    "koa-body": "^6.0.1",
+    "koa-route": "^3.2.0",
+    "koa-static-server": "^1.5.2",
+    "typescript": "^5.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1"
+  },
+  "scripts": {
+    "dev": "DEBUG=agc:* nodemon app.ts",
+    "start": "tsc --build && NODE_ENV=production pm2 start dist/app.js --name agc",
+    "stop": "pm2 stop agc && pm2 delete agc",
+    "clean": "rm -rf dist"
+  }
+}
