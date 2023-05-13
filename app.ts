@@ -20,7 +20,7 @@ app.use(serve({rootDir: '.well-known', rootPath: '/.well-known'}))
 app.use(route.get('/gacha', async ctx => {
   let gachaList: Gacha[] = []
   for (let i = 1; i <= 3; i++){
-    const res = await axios.get(`https://ak.hypergryph.com/user/api/inquiry/gacha?page=${i}&token=oeUWMmPVUd1vEgK1g8D4xRql&channelId=1`)
+    const res = await axios.get(`https://ak.hypergryph.com/user/api/inquiry/gacha?page=${i}&token=&channelId=1`)
     gachaList = gachaList.concat(res.data.data.list)
   }
   for (let i in gachaList) {
