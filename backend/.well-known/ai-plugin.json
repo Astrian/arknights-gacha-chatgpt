@@ -5,8 +5,11 @@
   "description_for_human": "Analysis your gacha result in Arknights (Chinese server only)",
   "description_for_model": "Analysis your gacha result in Arknights (Chinese server only)",
   "auth": {
-    "type": "user_http",
-    "authorization_type": "basic"
+    "type": "oauth",
+    "client_url": "https://agc.astrian.moe",
+    "scope": "",
+    "authorization_url": "https://agc.astrian.moe/auth/",
+    "authorization_content_type": "application/json"
   },
   "api": {
       "type": "openapi",
