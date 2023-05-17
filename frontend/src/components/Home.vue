@@ -29,7 +29,7 @@ const paste = async (event: Event) => {
   state.stage = 1
 
   try {
-    const res = await axios.post("http://localhost:3000/provider/token/verify_result", {}, {
+    const res = await axios.post(`${import.meta.env.VITE_BACKEND_DOMAIN}/provider/token/verify_result`, {}, {
       headers: {
         Authorization: `Bearer ${state.token}`
       }

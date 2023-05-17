@@ -8,7 +8,7 @@
     "type": "oauth",
     "client_url": "https://agc.astrian.moe",
     "scope": "openid",
-    "authorization_url": "https://agc.astrian.moe/auth/",
+    "authorization_url": "https://agc.astrian.moe/provider/token/",
     "authorization_content_type": "application/json"
   },
   "api": {

@@ -15,17 +15,92 @@ const app = new koa()
 app.use(koaBody())
 
 app.use(cors({
-  origin: (ctx: any) => {
-    const allowedOrigins = ['https://chat.openai.com', 'http://localhost:5173'];
-    const origin = ctx.request.headers.origin;
-    if (allowedOrigins.includes(origin ?? '')) {
-      return origin;
-    }
-    return '';
+  origin: 'https://chat.openai.com'
+}))
+
+app.use(serve({ rootDir: 'static', rootPath: '/static' }))
+
+app.use(route.get('/.well-known/ai-plugin.json', async ctx => {
+  print(ctx.request)
+  ctx.body = {
+    "schema_version": "v1",
+    "name_for_human": "ArkChatter",
+    "name_for_model": "arkchatter",
+    "description_for_human": "Obtain your Arknights game account data (Chinese server only)",
+    "description_for_model": "Obtain your Arknights game account data (Chinese server only)",
+    "auth": {
+      "type": "oauth",
+      "client_url": process.env.FRONTEND_DOMAIN,
+      "scope": "openid",
+      "authorization_url": `${process.env.SELF_DOMAIN}/provider/token/`,
+      "authorization_content_type": "application/json",
+      "verification_tokens": {
+        "openai": process.env.OPENAI_API_VERIFICATION
+      }
+    },
+    "api": {
+      "type": "openapi",
+      "url": `${process.env.SELF_DOMAIN}/static/ai-plugin-api.yaml`,
+      "is_user_authenticated": true
+    },
+    "logo_url": "https://web.hycdn.cn/arknights/official/static/share.19269d4d9c628de755a2.jpg",
+    "contact_email": "happy.wheel6743@astrian.moe",
+    "legal_info_url": "https://github.com/Astrian/arknights-gacha-chatgpt"
   }
 }))
 
-app.use(serve({rootDir: '.well-known', rootPath: '/.well-known'}))
+app.use(route.get('/.well-known/ai-plugin-api.yaml', async ctx => {
+  print(ctx.request)
+  ctx.header['content-type'] = 'text/yaml'
+  ctx.body = `openapi: 3.0.1
+  info:
+    title: ArkChatter
+    description: Obtain your Arknights game account data (Chinese server only)
+    version: 'v1'
+  servers:
+    - url: https://agc.astrian.moe
+  paths:
+    /gacha:
+      get:
+        operationId: getGachaResult
+        summary: Get recent gacha result
+        responses:
+          "200":
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/gachaResult'
+  components:
+    schemas:
+      gachaResult:
+        type: array
+        items:
+          type: object
+          properties:
+            ts:
+              type: integer
+              description: Timestamp of the gacha
+            pool:
+              type: string
+              description: Gacha pool, which means the collection of operators (characters)
+            chars:
+              type: array
+              description: Gacha result. Player may have 1-time gacha or 10-times gacha at a time, one “chars” item means one gacha
+              items:
+                type: object
+                description: Gacha result, indicates an operator (character)
+                properties:
+                  name: 
+                    type: string
+                    description: Operator name
+                  rarity:
+                    type: integer
+                    description: Operator rarity, 1(-star) means most common, 6(-star) means most rare
+                  isNew:
+                    type: boolean
+                    description: This operator is newly obtained by this player if true`
+}))
 
 app.use(route.get('/provider/gacha', async ctx => {
   // Get authentication header
@@ -54,17 +129,30 @@ app.use(route.get('/provider/gacha', async ctx => {
 }))
 
 app.use(route.post('/provider/token/verify_result', async ctx => {
+  print(ctx.request)
   const auth = ctx.request.headers.authorization
   const token = auth?.split(' ')[1]
-  const res = await axios.post(`https://as.hypergryph.com/u8/user/info/v1/basic`, {
-    appId: 1,
-    channelMasterId: 1,
-    channelToken: {
-      token: token
-    }
-  })
-  ctx.header['content-type'] = 'application/json'
-  ctx.body = res.data
+  print(`Token: ${token}`)
+  try {
+    const res = await axios.post(`https://as.hypergryph.com/u8/user/info/v1/basic`, {
+      appId: 1,
+      channelMasterId: 1,
+      channelToken: {
+        token
+      }
+    }, {
+      headers: {
+        'User-Agent': 'RapidAPI/4.2.0 (Macintosh; OS X/13.3.1) GCDHTTPRequest'
+      }
+    })
+    print(res)
+    ctx.header['content-type'] = 'application/json'
+    ctx.body = res.data
+  } catch (e: any) {
+    print(e)
+    ctx.status = 401
+    ctx.body = {msg: "Invalid token"}
+  }
 }))
 
 app.use(route.post('/provider/client', async ctx => {

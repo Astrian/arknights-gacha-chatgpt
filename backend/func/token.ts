@@ -19,7 +19,7 @@ export default async (code: string, redirect_uri: string, code_verifier: string,
   const client = await sqlite.get("SELECT * FROM client WHERE id = ?", [client_id])
   if (!client) throw ({ message: "client_id not found", status: 400 })
   if (!await bcrypt.compare(client_secret, client.secret)) throw ({ message: "client_secret not match", status: 400 })
-  if (client.callback !== redirect_uri) throw ({ message: "redirect_uri not match", status: 400 })
+  // if (client.callback !== redirect_uri) throw ({ message: "redirect_uri not match", status: 400 })
   debug("pass client verification")
 
   // Check if code is valid, and get token
