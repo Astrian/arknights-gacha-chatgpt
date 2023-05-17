@@ -6,6 +6,7 @@ import serve from 'koa-static-server'
 import cors from '@koa/cors'
 import axios from 'axios'
 import dotenv from 'dotenv'
+import func from './func'
 
 const print = Debug('agc:app')
 dotenv.config()
@@ -64,6 +65,23 @@ app.use(route.post('/provider/token/verify_result', async ctx => {
   })
   ctx.header['content-type'] = 'application/json'
   ctx.body = res.data
+}))
+
+app.use(route.post('/provider/client', async ctx => {
+  try {
+    // check client_name
+    if (!ctx.request.body.client_name) throw ({ message: "client_name is required", status: 400 })
+    // check callback
+    if (!ctx.request.body.callback) throw ({ message: "callback is required", status: 400 })
+    // check callback is url
+    if (!ctx.request.body.callback.match(/^https?:\/\/.+/)) throw ({ message: "callback must be url", status: 400 })
+    ctx.body = (await func.create_client(ctx.request.body.client_name, ctx.request.body.callback))
+    ctx.status = 200
+  } catch (e: any) {
+    print(e)
+    ctx.status = e.status ?? 500
+    ctx.body = {msg: e.message ?? "Internal Server Error"}
+  }
 }))
 
 app.listen(process.env.PORT ?? 3000, () => print(`Server running on port ${process.env.PORT ?? 3000}`))
