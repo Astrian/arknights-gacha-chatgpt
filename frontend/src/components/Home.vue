@@ -64,7 +64,7 @@ const authorise = async () => {
   }
 
   try {
-    const res = await axios.post(`http://localhost:3000/provider/auth_code`, body)
+    const res = await axios.post(`${import.meta.env.VITE_BACKEND_DOMAIN}/provider/auth_code`, body)
 
     console.log(res.data)
 

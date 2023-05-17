@@ -12,7 +12,7 @@ export default async (client_id: string, redirect_uri: string, scope: string, to
   if (!client) throw ({ message: "Client not found", status: 404 })
   debug(client)
   debug(redirect_uri)
-  if (client.callback !== redirect_uri) throw ({ message: "Redirect URI does not match", status: 400 })
+  // if (client.callback !== redirect_uri) throw ({ message: "Redirect URI does not match", status: 400 })
   // generate new auth code
   const auth_code = randomString(32)
   // check the auth_code has not been taken

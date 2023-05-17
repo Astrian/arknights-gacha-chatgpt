@@ -26,8 +26,8 @@ app.use(route.get('/.well-known/ai-plugin.json', async ctx => {
     "schema_version": "v1",
     "name_for_human": "ArkChatter",
     "name_for_model": "arkchatter",
-    "description_for_human": "Obtain your Arknights game account data (Chinese server only)",
-    "description_for_model": "Obtain your Arknights game account data (Chinese server only)",
+    "description_for_human": "Obtain your Arknights game account data (Chinese server only).",
+    "description_for_model": "Obtain your Arknights game account data (Chinese server only).",
     "auth": {
       "type": "oauth",
       "client_url": process.env.FRONTEND_DOMAIN,
@@ -51,16 +51,16 @@ app.use(route.get('/.well-known/ai-plugin.json', async ctx => {
 
 app.use(route.get('/.well-known/ai-plugin-api.yaml', async ctx => {
   print(ctx.request)
-  ctx.header['content-type'] = 'text/yaml'
+  ctx.set('Content-Type', 'text/yaml; charset=utf-8')
   ctx.body = `openapi: 3.0.1
   info:
     title: ArkChatter
     description: Obtain your Arknights game account data (Chinese server only)
     version: 'v1'
   servers:
-    - url: https://agc.astrian.moe
+    - url: ${process.env.SELF_DOMAIN}
   paths:
-    /gacha:
+    /provider/gacha:
       get:
         operationId: getGachaResult
         summary: Get recent gacha result
@@ -103,6 +103,7 @@ app.use(route.get('/.well-known/ai-plugin-api.yaml', async ctx => {
 }))
 
 app.use(route.get('/provider/gacha', async ctx => {
+  print(ctx.request.headers.authorization)
   // Get authentication header
   const auth = ctx.request.headers.authorization
   const token = auth?.split(' ')[1]
