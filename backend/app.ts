@@ -128,6 +128,47 @@ app.use(route.post('/provider/auth_code', async ctx => {
   }
 }))
 
+app.use(route.post('/provider/token', async ctx => {
+  const { grant_type, code, redirect_uri } = ctx.request.body
+  let { code_verifier, nonce } = ctx.request.body
+  let authorization = ctx.request.headers.authorization
+  if (!authorization) {
+    // it may put into the body
+    if (ctx.request.body.client_id && ctx.request.body.client_secret) {
+      authorization = `Basic ${Buffer.from(`${ctx.request.body.client_id}:${ctx.request.body.client_secret}`).toString('base64')}`
+    } else {
+      ctx.body = { msg: 'authorization is required' }
+      return ctx.status = 400
+    }
+  }
+  if (!grant_type) {
+    ctx.body = { msg: 'grant_type is required' }
+    return ctx.status = 400
+  }
+  if (grant_type !== 'authorization_code') {
+    ctx.body = { msg: 'grant_type not supported' }
+    return ctx.status = 400
+  }
+  if (!code) {
+    ctx.body = { msg: 'code is required' }
+    return ctx.status = 400
+  }
+  if (!redirect_uri) {
+    ctx.body = { msg: 'redirect_uri is required' }
+    return ctx.status = 400
+  }
+  if (!code_verifier) code_verifier = ""
+  if (!nonce) nonce = ""
+  try {
+    const token = await func.token(code, redirect_uri, code_verifier, authorization, nonce)
+    ctx.body = token.body
+  } catch (e: any) {
+    print(e)
+    ctx.status = e.status
+    ctx.body = { msg: e.message ?? "Internal Server Error" }
+  }
+}))
+
 app.listen(process.env.PORT ?? 3000, () => print(`Server running on port ${process.env.PORT ?? 3000}`))
 
 declare type Gacha = {
