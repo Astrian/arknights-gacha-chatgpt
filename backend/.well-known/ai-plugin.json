@@ -1,9 +1,9 @@
 {
   "schema_version": "v1",
-  "name_for_human": "Arknights Gacha Analyser",
-  "name_for_model": "arknightsGachaAnalyser",
-  "description_for_human": "Analysis your gacha result in Arknights (Chinese server only)",
-  "description_for_model": "Analysis your gacha result in Arknights (Chinese server only)",
+  "name_for_human": "ArkChatter",
+  "name_for_model": "arkchatter",
+  "description_for_human": "Obtain your Arknights game account data (Chinese server only)",
+  "description_for_model": "Obtain your Arknights game account data (Chinese server only)",
   "auth": {
     "type": "oauth",
     "client_url": "https://agc.astrian.moe",

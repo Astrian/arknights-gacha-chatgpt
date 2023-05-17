@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
-  title: Arknights Gacha Analyser
-  description: Analysis your gacha result in Arknights (Chinese server only)
+  title: ArkChatter
+  description: Obtain your Arknights game account data (Chinese server only)
   version: 'v1'
 servers:
   - url: https://agc.astrian.moe
