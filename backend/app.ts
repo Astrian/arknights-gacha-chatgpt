@@ -25,7 +25,7 @@ app.use(route.get('/.well-known/ai-plugin.json', async ctx => {
   ctx.body = {
     "schema_version": "v1",
     "name_for_human": "PRTS Chatter",
-    "name_for_model": "PRTS Chatter",
+    "name_for_model": "prtschatter",
     "description_for_human": "Obtain your Arknights game account data (Chinese server only).",
     "description_for_model": "Obtain your Arknights game account data (Chinese server only).",
     "auth": {
