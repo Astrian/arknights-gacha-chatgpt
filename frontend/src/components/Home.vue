@@ -80,7 +80,7 @@ const authorise = async () => {
   <div class="container">
     <div class="columns">
       <div class="column is-half is-offset-one-quarter main">
-        <h1 class="title is-1">ArkChatter</h1>
+        <h1 class="title is-1">PRTS Chatter</h1>
         <p class="subtitle">Access your Arknights game data on generative AI chatbots.</p>
         <hr />
         <div v-if="state.stage === 0">
@@ -107,7 +107,7 @@ const authorise = async () => {
         </div>
         <div v-if="state.stage === 2">
           <h2 class="title is-2">Welcome, {{ state.user_profile.nickName }}</h2>
-          <p>You are about to authrize <b>ArkChatter</b> and <b>ChatGPT</b> to access your Hypergryph account, including:</p>
+          <p>You are about to authrize <b>PRTS Chatter</b> and <b>ChatGPT</b> to access your Hypergryph account, including:</p>
           <ul>
             <li>Basic personal information</li>
             <li>Headhunting (gacha) history</li>

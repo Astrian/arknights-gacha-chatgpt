@@ -24,8 +24,8 @@ app.use(route.get('/.well-known/ai-plugin.json', async ctx => {
   print(ctx.request)
   ctx.body = {
     "schema_version": "v1",
-    "name_for_human": "ArkChatter",
-    "name_for_model": "arkchatter",
+    "name_for_human": "PRTS Chatter",
+    "name_for_model": "PRTS Chatter",
     "description_for_human": "Obtain your Arknights game account data (Chinese server only).",
     "description_for_model": "Obtain your Arknights game account data (Chinese server only).",
     "auth": {
@@ -54,7 +54,7 @@ app.use(route.get('/.well-known/ai-plugin-api.yaml', async ctx => {
   ctx.set('Content-Type', 'text/yaml; charset=utf-8')
   ctx.body = `openapi: 3.0.1
   info:
-    title: ArkChatter
+    title: PRTS Chatter
     description: Obtain your Arknights game account data (Chinese server only)
     version: 'v1'
   servers:
