@@ -84,6 +84,50 @@ app.use(route.post('/provider/client', async ctx => {
   }
 }))
 
+app.use(route.post('/provider/auth_code', async ctx => {
+  try {
+    const { client_id, redirect_uri, response_type, scope, token } = ctx.request.body
+    let { code_challenge_method, code_challenge, nonce } = ctx.request.body
+    // Check their existence and make sure they are not array
+    if (!client_id) throw ({ message: "client_id is required", status: 400 })
+    if (!redirect_uri) throw ({ message: "redirect_uri is required", status: 400 })
+    if (!response_type) throw ({ message: "response_type is required", status: 400 })
+    if (!scope) throw ({ message: "scope is required", status: 400 })
+    // code_challenge can be empty
+    if (!code_challenge_method) code_challenge_method = ''
+    if (!code_challenge) code_challenge = ''
+    if (!nonce) nonce = ''
+    if (Array.isArray(client_id)) throw ({ message: "client_id must not be array", status: 400 })
+    if (Array.isArray(redirect_uri)) throw ({ message: "redirect_uri must not be array", status: 400 })
+    if (Array.isArray(response_type)) throw ({ message: "response_type must not be array", status: 400 })
+    if (Array.isArray(scope)) throw ({ message: "scope must not be array", status: 400 })
+    // if (Array.isArray(code_challenge_method)) throw ({ message: "code_challenge_method must not be array", status: 400 })
+    // if (Array.isArray(code_challenge)) throw ({ message: "code_challenge must not be array", status: 400 })
+
+    if (code_challenge_method !== 'S256' && code_challenge_method !== "") throw ({ message: "code_challenge_method not supported", status: 400 })
+
+    // scope will only support openid, offline_access, email
+    // They can be combined with space
+    scope.split(' ').forEach((s: string) => {
+      if (!['openid'].includes(s)) throw ({ message: "scope not supported", status: 400 })
+    })
+    // scope must contain openid
+    if (!scope.split(' ').includes('openid')) throw ({ message: "scope must contain openid", status: 400 })
+
+    // response_type will only support "code"
+    if (response_type !== "code") throw ({ message: "response_type not supported", status: 400 })
+
+    let auth_code = await func.auth_code(client_id, redirect_uri, scope, token, code_challenge, nonce)
+    // set jwt header
+    // res.set('Authorization', `Bearer ${auth_code.jwt_header}`)
+    ctx.body = { auth_code }
+  } catch (e: any) {
+    print(e)
+    ctx.status = e.status ?? 500
+    ctx.body = {msg: e.message ?? "Internal Server Error"}
+  }
+}))
+
 app.listen(process.env.PORT ?? 3000, () => print(`Server running on port ${process.env.PORT ?? 3000}`))
 
 declare type Gacha = {

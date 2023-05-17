@@ -13,7 +13,8 @@
     "bulma": "^0.9.4",
     "sass": "^1.62.1",
     "scss": "^0.2.4",
-    "vue": "^3.2.47"
+    "vue": "^3.2.47",
+    "vue-router": "^4.2.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.1.0",

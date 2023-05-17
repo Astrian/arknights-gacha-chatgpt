@@ -7,7 +7,7 @@ const debug = Debug('a3b:func:auth_code')
 
 dovenv.config()
 
-export default async (client_id: string, redirect_uri: string, scope: string, userid: string, code_challenge: string, nonce: string)=> {
+export default async (client_id: string, redirect_uri: string, scope: string, token: string, code_challenge: string, nonce: string)=> {
   const client = await sqlite.get("SELECT * FROM client WHERE id = ?", [client_id])
   if (!client) throw ({ message: "Client not found", status: 404 })
   debug(client)
@@ -24,6 +24,6 @@ export default async (client_id: string, redirect_uri: string, scope: string, us
   } while (!auth_code_check)
 
   // insert auth_code
-  await sqlite.run("INSERT INTO auth_code (code, client_id, scope, user_id, code_challenge, nonce) VALUES (?, ?, ?, ?, ?, ?)", [auth_code, client_id, scope, userid, code_challenge, nonce])
+  await sqlite.run("INSERT INTO auth_code (code, client_id, scope, token, code_challenge, nonce) VALUES (?, ?, ?, ?, ?, ?)", [auth_code, client_id, scope, token, code_challenge, nonce])
   return auth_code
 }
